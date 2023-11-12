@@ -10,26 +10,6 @@ import numpy as np
 #generating initial random forest
 grid = np.random.randint(0,2,(5,5))
 
-#ref_grid = np.array(['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t',
- #                'u','v','w','x','y']).reshape(5,5)
-
-# def moore_neighbourhood(x,y):
-#     if x==0 & y==0:
-#         return np.array(list(itertools.product([x+i for i in range(0,2)],[y+i for i in range(0,2)])))
-#     elif x==0:
-#         return np.array(list(itertools.product([x+i for i in range (0,2)], [y+i for i in range(-1,2)])))
-#     elif y==0:
-#         return np.array(list(itertools.product([x+i for i in range(-1,2)],[y+i for i in range(0,2)])))
-#     else:
-#         return np.array(list(itertools.product([x+i for i in range(-1,2)],[y+i for i in range(-1,2)])))
-
-print(grid)
-# print('====== Trees ======')
-# x,y = np.where(grid == 1)[0], np.where(grid == 1)[1]
-# trees = np.array([(x[i],y[i]) for i in range(0,len(x))], dtype=tuple)
-# print(trees[1])
-# print('====== Moore Neighbourhood ======')
-# print(moore_neighbourhood(trees[1][0],trees[1][1]))
 
 def moore_neighbourhood(x,y,grid):
     x_lower,x_upper = 1,1
@@ -59,4 +39,12 @@ def moore_neighbourhood(x,y,grid):
     
     return grid[row_start:row_end,col_start:col_end]
 
-print(moore_neighbourhood(2,4, grid))
+print(grid)
+print('====== Trees ======')
+x,y = np.where(grid == 1)[0], np.where(grid == 1)[1]
+trees = np.array([(x[i],y[i]) for i in range(0,len(x))], dtype=tuple)
+print(trees)
+print('====== Moore Neighbourhood ======')
+print(moore_neighbourhood(trees[1][0],trees[1][1],grid))
+
+
