@@ -9,6 +9,8 @@ import numpy as np
 
 #generating initial random forest
 grid = np.random.randint(0,2,(5,5))
+f = 0.1
+p = 0.001
 
 
 def moore_neighbourhood(x,y,grid):
@@ -36,15 +38,17 @@ def moore_neighbourhood(x,y,grid):
     col_start = y-y_lower
     col_end = y+y_upper+1
     
-    
     return grid[row_start:row_end,col_start:col_end]
 
-print(grid)
-print('====== Trees ======')
-x,y = np.where(grid == 1)[0], np.where(grid == 1)[1]
-trees = np.array([(x[i],y[i]) for i in range(0,len(x))], dtype=tuple)
-print(trees)
-print('====== Moore Neighbourhood ======')
-print(moore_neighbourhood(trees[1][0],trees[1][1],grid))
-
-
+for _ in range(0,100):    
+    grid[grid == -1] = 0
+        
+    x,y = np.where(grid == 1)[0], np.where(grid == 1)[1]
+    trees = np.array([(x[i],y[i]) for i in range(0,len(x))], dtype=tuple)
+    for t in trees:
+        if any((moore_neighbourhood(t[0], t[1], grid) == -1).flatten()):
+            grid[t[0],t[1]] == -1
+            
+    grid[grid == 1] = np.random.choice([1,-1],1,p=[1-f,f])
+    grid[grid == 0] = np.random.choice([0,1],1,p=[1-p,p])
+    print(grid)
