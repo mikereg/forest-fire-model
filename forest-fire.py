@@ -11,14 +11,13 @@ from matplotlib import colors
 from matplotlib.pyplot import draw, pause
 
 
-l = 100 #length of grid
+l = 200 #length of grid
 
 #generating initial random forest
 grid = np.random.randint(0,2,(l,l))
 
-
-f = 0.01
-p = 0.005
+f = 0.0001
+p = 0.01
 
 def moore_neighbourhood(x,y,grid):
     x_lower,x_upper = 1,1
@@ -44,7 +43,7 @@ def moore_neighbourhood(x,y,grid):
     
     col_start = y-y_lower
     col_end = y+y_upper+1
-    
+
     return grid[row_start:row_end,col_start:col_end]
 
 
@@ -56,16 +55,23 @@ cmap = colors.ListedColormap(colors_list)
 board_image = ax.imshow(grid,cmap=cmap,vmin=0,vmax=2)
 
 
-for _ in range(0,100):
+for _ in range(0,200):
+
+    grid_old = grid.copy()
     board_image.set_data(grid)
     board_image.norm.autoscale([0,1,2])
     draw()
-    pause(1)
-    grid[grid == 2] = 0
-    x,y = np.where(grid == 1)[0], np.where(grid == 1)[1]
+    pause(0.05)
+    
+    grid[grid_old==2] = 0 
+
+    x,y = np.where(grid_old == 1)[0], np.where(grid_old == 1)[1]
     trees = np.array([(x[i],y[i]) for i in range(0,len(x))], dtype=tuple)
+
+    grid[grid_old == 1] = np.random.choice([1,2],len(trees),p=[1-f,f])
+   
+    grid[grid_old == 0] = np.random.choice([0,1],np.sum(grid_old == 0),p=[1-p,p])
+
     for t in trees:
-        if any((moore_neighbourhood(t[0], t[1], grid) == 2).flatten()):
+        if any((moore_neighbourhood(t[0], t[1], grid_old) == 2).flatten()):
             grid[t[0],t[1]] = 2
-    grid[grid == 1] = np.random.choice([1,2],len(trees),p=[1-f,f])
-    grid[grid == 0] = np.random.choice([0,1],(l**2)-len(trees),p=[1-p,p])
