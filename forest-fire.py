@@ -17,7 +17,7 @@ l = 100 #length of grid
 grid = np.random.randint(0,2,(l,l))
 
 
-f = 0.00001
+f = 0.01
 p = 0.005
 
 def moore_neighbourhood(x,y,grid):
@@ -66,6 +66,6 @@ for _ in range(0,100):
     trees = np.array([(x[i],y[i]) for i in range(0,len(x))], dtype=tuple)
     for t in trees:
         if any((moore_neighbourhood(t[0], t[1], grid) == 2).flatten()):
-            grid[t[0],t[1]] == 2
+            grid[t[0],t[1]] = 2
     grid[grid == 1] = np.random.choice([1,2],len(trees),p=[1-f,f])
     grid[grid == 0] = np.random.choice([0,1],(l**2)-len(trees),p=[1-p,p])
