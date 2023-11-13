@@ -7,6 +7,7 @@ Created on Thu Nov  9 22:51:15 2023
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import colors
 from matplotlib.pyplot import draw, pause
 
 
@@ -16,7 +17,7 @@ l = 100 #length of grid
 grid = np.random.randint(0,2,(l,l))
 
 
-f = 0.001
+f = 0.00001
 p = 0.005
 
 def moore_neighbourhood(x,y,grid):
@@ -49,19 +50,22 @@ def moore_neighbourhood(x,y,grid):
 
 fig = plt.figure()
 ax = fig.gca()
-board_image = ax.imshow(grid,cmap='Greens',vmin=0,vmax=2)
+
+colors_list = ['black','green','red']
+cmap = colors.ListedColormap(colors_list)
+board_image = ax.imshow(grid,cmap=cmap,vmin=0,vmax=2)
 
 
 for _ in range(0,100):
     board_image.set_data(grid)
     board_image.norm.autoscale([0,1,2])
     draw()
-    pause(0.5)
-    grid[grid == -1] = 0
+    pause(1)
+    grid[grid == 2] = 0
     x,y = np.where(grid == 1)[0], np.where(grid == 1)[1]
     trees = np.array([(x[i],y[i]) for i in range(0,len(x))], dtype=tuple)
     for t in trees:
-        if any((moore_neighbourhood(t[0], t[1], grid) == -1).flatten()):
-            grid[t[0],t[1]] == -1
-    grid[grid == 1] = np.random.choice([1,-1],len(trees),p=[1-f,f])
+        if any((moore_neighbourhood(t[0], t[1], grid) == 2).flatten()):
+            grid[t[0],t[1]] == 2
+    grid[grid == 1] = np.random.choice([1,2],len(trees),p=[1-f,f])
     grid[grid == 0] = np.random.choice([0,1],(l**2)-len(trees),p=[1-p,p])
