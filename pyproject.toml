@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forest-fire-model"
+version = "1.0.0"
+description = "A fast, tested implementation of the Drossel-Schwabl forest-fire model and its fire-size statistics."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Michael Reginiano" }]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "hypothesis>=6.100",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "jupyter>=1.0",
+    "nbmake>=1.5",
+    "pip-tools>=7.4",
+]
+
+[project.scripts]
+forest-fire = "forest_fire.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "NPY", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+module = ["scipy.*"]
+ignore_missing_imports = true
