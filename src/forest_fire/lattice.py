@@ -39,6 +39,11 @@ _STRUCTURES = {
 }
 
 
+def random_lattice(size: int, tree_density: float, rng: np.random.Generator) -> Grid:
+    """A size x size lattice with each cell independently a tree with probability tree_density."""
+    return (rng.random((size, size)) < tree_density).astype(np.int8)
+
+
 def neighbour_offsets(neighbourhood: Neighbourhood) -> list[tuple[int, int]]:
     """The (row, column) offsets from a cell to each of its neighbours."""
     return list(_OFFSETS[neighbourhood])
