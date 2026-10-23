@@ -47,11 +47,21 @@ The four Drossel–Schwabl rules applied literally and simultaneously to every c
 _Avoid_: real-time mode, animation mode
 
 **Instantaneous mode**:
-The time-scale-separated limit: a lightning strike burns its entire cluster within a single time step.
+The time-scale-separated limit, advanced in events rather than time steps: a lightning strike burns its entire cluster at once.
 _Avoid_: fast mode, cluster mode
 
+**Event**:
+One unit of instantaneous-mode time: θ planting attempts on randomly chosen cells, followed by one lightning strike on a randomly chosen cell.
+_Avoid_: step, sweep (in instantaneous mode)
+
+**Planting attempt**:
+Choosing a cell at random and turning it into a tree if it is empty; an attempt on a non-empty cell does nothing.
+
+**Theta (θ)**:
+The ratio p/f: the number of planting attempts per lightning strike. The only parameter of instantaneous mode.
+
 **Fire**:
-The burning of one cluster struck by lightning in a time step; several strikes on the same cluster in one step make a single fire. Only well-defined in instantaneous mode; in stepwise mode fires can merge.
+The burning of the cluster containing a struck tree. A strike on an empty cell causes no fire. Only well-defined in instantaneous mode; in stepwise mode fires can merge.
 
 **Fire size**:
 The number of trees burned in one fire.
