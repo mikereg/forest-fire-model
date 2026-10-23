@@ -9,7 +9,7 @@ description = "A fast, tested implementation of the Drossel-Schwabl forest-fire 
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Michael Reginiano" }]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "numpy>=1.26",
     "scipy>=1.11",
@@ -39,10 +39,14 @@ addopts = "-ra"
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
+# The notebook is generated from notebooks/build_notebook.py, which is linted instead.
+extend-exclude = ["notebooks/*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "NPY", "SIM", "RUF"]
+# Greek letters and typographic dashes are deliberate physics notation.
+ignore = ["RUF001", "RUF002", "RUF003"]
 
 [tool.mypy]
 strict = true
