@@ -60,11 +60,15 @@ def label_clusters(
         return labels, n
 
     # Clusters that touch across a wrapped edge are one cluster: union their labels.
-    pairs = [
-        np.stack([labels, np.roll(labels, (dr, dc), axis=(0, 1))]).reshape(2, -1)
-        for dr, dc in _OFFSETS[neighbourhood]
-    ]
-    a, b = np.concatenate(pairs, axis=1)
+    # Only perimeter cells have wrapped neighbours, so only they need checking.
+    rows, cols = labels.shape
+    r = np.concatenate([np.zeros(cols), np.full(cols, rows - 1), np.arange(rows), np.arange(rows)])
+    c = np.concatenate([np.arange(cols), np.arange(cols), np.zeros(rows), np.full(rows, cols - 1)])
+    r, c = r.astype(np.intp), c.astype(np.intp)
+    a = np.concatenate([labels[r, c]] * len(_OFFSETS[neighbourhood]))
+    b = np.concatenate(
+        [labels[(r + dr) % rows, (c + dc) % cols] for dr, dc in _OFFSETS[neighbourhood]]
+    )
     touching = (a > 0) & (b > 0) & (a != b)
     graph = sparse.coo_matrix(
         (np.ones(touching.sum()), (a[touching], b[touching])), shape=(n + 1, n + 1)
