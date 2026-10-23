@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "forest-fire-model: a fast, tested Drossel–Schwabl forest-fire model"
+abstract: >-
+  A vectorised implementation of the Drossel–Schwabl forest-fire model, with stepwise and
+  instantaneous (time-scale-separated) simulation modes and a discrete maximum-likelihood
+  fit of the fire-size power law.
+authors:
+  - family-names: Reginiano
+    given-names: Michael
+version: 1.0.0
+date-released: 2026-10-23
+license: MIT
+repository-code: "https://github.com/mikereg/forest-fire-model"
+keywords:
+  - cellular automata
+  - self-organized criticality
+  - forest-fire model
+  - power law
+  - maximum likelihood
