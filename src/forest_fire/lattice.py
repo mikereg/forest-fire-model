@@ -39,6 +39,11 @@ _STRUCTURES = {
 }
 
 
+def neighbour_offsets(neighbourhood: Neighbourhood) -> list[tuple[int, int]]:
+    """The (row, column) offsets from a cell to each of its neighbours."""
+    return list(_OFFSETS[neighbourhood])
+
+
 def has_burning_neighbour(grid: Grid, neighbourhood: Neighbourhood, boundary: Boundary) -> Mask:
     """Mask of cells with at least one burning cell in their neighbourhood."""
     burning: Mask = grid == State.BURNING
