@@ -44,7 +44,8 @@ def _run(args: argparse.Namespace) -> None:
     result = instantaneous.simulate(burn_in.grid, params, args.events, rng)
     np.savez_compressed(args.out, fire_sizes=result.fire_sizes, tree_density=result.tree_density)
 
-    f = powerlaw.fit(result.fire_sizes, s_max=args.s_max)
+    # Above ~theta the distribution bends into its cutoff, so fit below it by default.
+    f = powerlaw.fit(result.fire_sizes, s_max=args.s_max or args.theta)
     print(f"{result.fire_sizes.size} fires, mean tree density {result.tree_density.mean():.4f}")
     print(f"tau = {f.tau:.3f} ± {f.sigma:.3f}  (s_min={f.s_min}, s_max={f.s_max}, n={f.n})")
     print(f"saved to {args.out}")
@@ -90,6 +91,8 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--burn-in", type=int, default=20_000, help="events discarded before measuring"
     )
-    run.add_argument("--s-max", type=int, default=None, help="upper end of the fitting window")
+    run.add_argument(
+        "--s-max", type=int, default=None, help="upper end of the fitting window (default: theta)"
+    )
     run.add_argument("--out", type=Path, default=Path("fires.npz"))
     return parser
