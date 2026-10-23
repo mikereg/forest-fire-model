@@ -1,6 +1,6 @@
 # Forest-Fire Model
 
-[![CI](https://github.com/mikereg/self-organised-criticality/actions/workflows/ci.yml/badge.svg)](https://github.com/mikereg/self-organised-criticality/actions/workflows/ci.yml)
+[![CI](https://github.com/mikereg/forest-fire-model/actions/workflows/ci.yml/badge.svg)](https://github.com/mikereg/forest-fire-model/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -27,8 +27,8 @@ n(s) ∝ s^−τ over many decades.
 ## Quick start
 
 ```bash
-git clone https://github.com/mikereg/self-organised-criticality.git
-cd self-organised-criticality
+git clone https://github.com/mikereg/forest-fire-model.git
+cd forest-fire-model
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt        # or requirements-dev.txt for tests and the notebook
