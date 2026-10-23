@@ -157,10 +157,10 @@ fig, ax = plt.subplots(figsize=(6, 4.2))
 colours = plt.cm.viridis(np.linspace(0.1, 0.85, len(thetas)))
 for theta, colour in zip(thetas, colours, strict=True):
     _, r = run(L, theta, EVENTS // 2, BURN_IN, rng)
-    f = powerlaw.fit(r.fire_sizes, s_max=theta)
+    theta_fit = powerlaw.fit(r.fire_sizes, s_max=theta)
     s, n_s = log_binned(r.fire_sizes)
     ax.loglog(s, n_s, "o-", ms=3, lw=1, color=colour,
-              label=f"θ = {theta}: τ = {f.tau:.3f} ± {f.sigma:.3f}")
+              label=f"θ = {theta}: τ = {theta_fit.tau:.3f} ± {theta_fit.sigma:.3f}")
 ax.set(xlabel="fire size s", ylabel="n(s)", title=f"Cutoff moves with θ (L = {L})")
 ax.legend(frameon=False)
 if not QUICK:
