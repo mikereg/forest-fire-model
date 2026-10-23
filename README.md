@@ -79,7 +79,12 @@ with θ = p/f = 500:
 The exponent agrees with published estimates of about 1.1–1.2 for the two-dimensional model
 ([Clar, Drossel & Schwabl 1996][cds96]).
 
-The notebook also shows how the cutoff moves with θ and with L. It ends with the honest
+Increasing θ pushes the cutoff to larger fires while the power-law region stays put. The
+fitted τ wanders by a few hundredths between θ values, by more than its error bar:
+
+<p align="center"><img src="docs/assets/theta-dependence.png" width="520" alt="Fire-size distributions for theta = 125, 250, 500 and 1000, with the cutoff moving right as theta grows"></p>
+
+The notebook also shows finite-size effects as L varies. It ends with the honest
 caveat from the literature: at much larger scales the model's scaling breaks down
 ([Grassberger 2002][g02]; [Pruessner & Jensen 2002][pj02]), so τ here is an effective exponent
 for this range of θ.
