@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 from hypothesis.extra.numpy import arrays
@@ -82,3 +83,9 @@ def test_every_fire_burns_one_whole_cluster(
     assert struck.size == 1
     np.testing.assert_array_equal(burnt, labels == struck[0])
     assert result.fire_sizes.tolist() == [int(burnt.sum())]
+
+
+def test_rejects_a_grid_with_burning_cells() -> None:
+    grid = np.array([[T, 2]], dtype=np.int8)
+    with pytest.raises(ValueError, match="burning"):
+        simulate(grid, Params(theta=1), n_events=1, rng=np.random.default_rng(0))

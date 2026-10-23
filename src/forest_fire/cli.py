@@ -40,14 +40,16 @@ def _run(args: argparse.Namespace) -> None:
     params = instantaneous.Params(args.theta, args.neighbourhood, args.boundary)
     grid = np.zeros((args.size, args.size), dtype=np.int8)
 
-    burn_in = instantaneous.simulate(grid, params, args.burn_in, rng)
-    result = instantaneous.simulate(burn_in.grid, params, args.events, rng)
+    warm = instantaneous.simulate(grid, params, args.burn_in, rng)
+    result = instantaneous.simulate(warm.grid, params, args.events, rng)
     np.savez_compressed(args.out, fire_sizes=result.fire_sizes, tree_density=result.tree_density)
 
     # Above ~theta the distribution bends into its cutoff, so fit below it by default.
-    f = powerlaw.fit(result.fire_sizes, s_max=args.s_max or args.theta)
+    fit = powerlaw.fit(result.fire_sizes, s_max=args.s_max or args.theta)
     print(f"{result.fire_sizes.size} fires, mean tree density {result.tree_density.mean():.4f}")
-    print(f"tau = {f.tau:.3f} ± {f.sigma:.3f}  (s_min={f.s_min}, s_max={f.s_max}, n={f.n})")
+    print(
+        f"tau = {fit.tau:.3f} ± {fit.sigma:.3f}  (s_min={fit.s_min}, s_max={fit.s_max}, n={fit.n})"
+    )
     print(f"saved to {args.out}")
 
 

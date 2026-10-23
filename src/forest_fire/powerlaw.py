@@ -6,8 +6,6 @@ import numpy as np
 import numpy.typing as npt
 from scipy import optimize, special
 
-Sizes = npt.ArrayLike
-
 
 @dataclass(frozen=True)
 class Fit:
@@ -22,7 +20,7 @@ class Fit:
     """Number of sizes inside the fitting window."""
 
 
-def fit(sizes: Sizes, s_min: int | None = None, s_max: int | None = None) -> Fit:
+def fit(sizes: npt.ArrayLike, s_min: int | None = None, s_max: int | None = None) -> Fit:
     """Fit a discrete power law to the sizes in [s_min, s_max] by maximum likelihood.
 
     With ``s_min=None`` it is chosen, as in Clauset et al., to minimise the Kolmogorov-Smirnov
@@ -45,7 +43,7 @@ def fit(sizes: Sizes, s_min: int | None = None, s_max: int | None = None) -> Fit
         distinct = distinct[picks]
 
     fits = [_fit_window(s[s >= m], int(m), s_max) for m in distinct]
-    distances = [_ks_distance(s[s >= f.s_min], f) for f in fits]
+    distances = [_ks_distance(s[s >= m.s_min], m) for m in fits]
     return fits[int(np.argmin(distances))]
 
 
@@ -78,24 +76,24 @@ def _fit_window(window: npt.NDArray[np.integer], s_min: int, s_max: int | None) 
     return Fit(tau=tau, sigma=float(sigma), s_min=s_min, s_max=s_max, n=n)
 
 
-def _ks_distance(window: npt.NDArray[np.integer], f: Fit) -> float:
+def _ks_distance(window: npt.NDArray[np.integer], model: Fit) -> float:
     """Largest gap between the empirical and the fitted CDF over the window."""
     values, counts = np.unique(window, return_counts=True)
     empirical = np.cumsum(counts) / window.size
-    return float(np.max(np.abs(empirical - cdf(values, f))))
+    return float(np.max(np.abs(empirical - cdf(values, model))))
 
 
-def cdf(s: npt.ArrayLike, f: Fit) -> npt.NDArray[np.float64]:
+def cdf(s: npt.ArrayLike, model: Fit) -> npt.NDArray[np.float64]:
     """P(S <= s) under the fitted power law, for s inside the fitting window."""
     s = np.asarray(s, dtype=np.float64)
-    log_z = _log_normaliser(f.tau, f.s_min, f.s_max)
-    if f.tau > 1:
-        below = special.zeta(f.tau, f.s_min) - special.zeta(f.tau, s + 1)
+    log_z = _log_normaliser(model.tau, model.s_min, model.s_max)
+    if model.tau > 1:
+        below = special.zeta(model.tau, model.s_min) - special.zeta(model.tau, s + 1)
         return np.asarray(below / np.exp(log_z), dtype=np.float64)
-    assert f.s_max is not None  # unbounded fits always have tau > 1
-    k = np.arange(f.s_min, f.s_max + 1, dtype=np.float64)
-    cumulative = np.cumsum(np.exp(-f.tau * np.log(k) - log_z))
-    return np.asarray(cumulative[s.astype(np.intp) - f.s_min], dtype=np.float64)
+    assert model.s_max is not None  # unbounded fits always have tau > 1
+    k = np.arange(model.s_min, model.s_max + 1, dtype=np.float64)
+    cumulative = np.cumsum(np.exp(-model.tau * np.log(k) - log_z))
+    return np.asarray(cumulative[s.astype(np.intp) - model.s_min], dtype=np.float64)
 
 
 def _log_normaliser(tau: float, s_min: int, s_max: int | None) -> float:

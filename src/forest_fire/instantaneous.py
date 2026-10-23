@@ -35,6 +35,8 @@ class Result:
 
 def simulate(grid: Grid, params: Params, n_events: int, rng: np.random.Generator) -> Result:
     """Run ``n_events`` events from ``grid`` (which must hold only empty and tree cells)."""
+    if np.any(grid == State.BURNING):
+        raise ValueError("instantaneous mode takes a grid with no burning cells")
     grid = grid.copy()
     flat = grid.reshape(-1)
     burn = _Burner(grid.shape, params)
@@ -44,12 +46,12 @@ def simulate(grid: Grid, params: Params, n_events: int, rng: np.random.Generator
 
     for start in range(0, n_events, _CHUNK):
         stop = min(start + _CHUNK, n_events)
-        planted = rng.integers(0, flat.size, size=(stop - start, params.theta))
+        attempts = rng.integers(0, flat.size, size=(stop - start, params.theta))
         strikes = rng.integers(0, flat.size, size=stop - start)
         for i, event in enumerate(range(start, stop)):
-            new = planted[i][flat[planted[i]] == State.EMPTY]
-            flat[new] = State.TREE
-            n_trees += np.unique(new).size
+            planted = attempts[i][flat[attempts[i]] == State.EMPTY]
+            flat[planted] = State.TREE
+            n_trees += np.unique(planted).size
 
             if flat[strikes[i]] == State.TREE:
                 size = burn(flat, int(strikes[i]))
